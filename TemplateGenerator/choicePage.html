@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICL India</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="./style/choicePage.css">
+    <link href="style/bootstrap.min.css" rel="stylesheet">
+    <script src="script/angular.min.js"></script>
+   
+    <link rel="stylesheet" href="style/indexStyle.css" />
+</head>
+
+<body ng-controller="myCtrl">
+    <header>
+        <img class="mx-auto d-block mb-4" src="images/logo.png">
+    </header>
+
+    <div class="card-generator mb-5">
+        <h1 class="E-card" id="E-card"> E-Card</h1>
+        <form id="ecard-form" ng-submit="GenerateTemplate()">
+            <label for="template">Select Template</label>
+            <br><br>
+            <div class="templates">
+                <div class="row justify-content-center">
+                    <div class="col-lg-3 col-md-4 col-sm-6" ng-repeat="template in templates">
+
+
+                        <input type="radio" name="template" id="template{{$index}}" ng-model="$parent.selectedTemplate"
+                               ng-value="template.TemplateImagePath" ng-checked="$index === 0">
+                        <label for="template{{$index}}">
+                            <img ng-src="{{template.TemplateImagePath}}"
+                                 alt="Template {{$index + 1}}">
+                        </label>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="input-fields form-group">
+                        <input type="text" id="customerName" name="customerName" placeholder="Enter Customer Name"
+                               ng-model="customerName" class="form-control" required>
+                        <input type="text" id="yourName" name="yourName" class="form-control" placeholder="Enter Your Name*" ng-model="yourName"
+                               required>
+                        <input type="text" id="yourInfo" name="yourInfo" class="form-control" placeholder="Enter Your Information"
+                               ng-model="yourInfo">
+                    </div>
+                </div>
+            </div>
+
+
+            <button class="btn btn-danger" type="submit">Generate Template</button>
+        </form>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var app = angular.module('myApp', []);
+
+        app.controller('myCtrl', function ($scope, $http, $window) {
+            $scope.templates = [];
+            $scope.customerName = '';
+            $scope.yourName = '';
+            $scope.yourInfo = '';
+            $scope.selectedTemplate = ''; 
+            $scope.TemplateName = '';
+
+            const baseUrl = "/";
+            const id = getQueryParam('id');
+            const val = getQueryParam('val');
+
+            const nameMap = {
+                "Welcome": "Welcome",
+                "AllTheBest": "All The Best",
+                "Birthday": "Birthday",
+                "WeddingAnniversary": "Wedding Anniversary",
+                "workanniversary": "Work Anniversary",
+                "Congratulations": "Congratulations",
+                "WorldCancerDay": "World Cancer Day",
+                "worldTuberculosisday": "World Tuberculosis Day",
+                "worldNurseDay": "World Nurse Day",
+                "worldBloodDonerDay": "World Blood Donor Day",
+                "NationalDoctor'sDay": "National Doctor's Day",
+                "worldHealthDay": "World Health Day",
+                "ThankYou": "Thank You",
+                "HappyNewYear": "Happy New Year",
+                "MerryChristmas": "Merry Christmas"
+            };
+
+            $scope.getProperName = function (classicName) {
+                return nameMap[classicName] || classicName;
+            };
+
+           
+            let url = (val == 1)
+                ? `${baseUrl}Template/GetTemplateByFestivalID?id=${id}`
+                : `${baseUrl}Template/GetTemplateByClassicID?id=${id}`;
+
+            if (id) {
+                
+                $http({
+                    method: "POST",
+                    url: url,
+                    headers: { "Content-Type": "application/json" }
+                }).then(
+                    function (response) {
+                        if (response.data && response.data.success) {
+                            $scope.templates = response.data.TemplateList || [];
+
+                            if ($scope.templates.length > 0) {
+                               
+                                $scope.selectedTemplate = $scope.templates[0].TemplateImagePath || '';
+                                $scope.TemplateName = $scope.templates[0].TemplateName || '';
+
+                                const ecard = document.getElementById('E-card');
+                                if ($scope.TemplateName) {
+                                    ecard.innerHTML = `${$scope.getProperName($scope.TemplateName)} E-cards`;
+                                } else {
+                                    ecard.innerHTML = "E-cards";
+                                }
+                            } else {
+                                console.error("Template list is empty.");
+                                updateEcardMessage("E-cards");
+                            }
+                        } else {
+                            console.error("No templates found or success flag is false.");
+                            updateEcardMessage("E-cards");
+                        }
+                    },
+                    function (error) {
+                        console.error("Error fetching templates:", error);
+                        updateEcardMessage("E-cards");
+                    }
+                );
+            } else {
+              
+                $window.location.href = '/indexPage.html';
+            }
+
+         
+            function updateEcardMessage(message) {
+                const ecard = document.getElementById('E-card');
+                if (ecard) {
+                    ecard.innerHTML = message;
+                }
+            }
+
+           
+            $scope.GenerateTemplate = function () {
+                if ($scope.selectedTemplate) {
+                    const customerName = $scope.customerName || "Guest";
+                    const yourName = $scope.yourName || "Sender";
+                    const yourInfo = $scope.yourInfo || "No Info";
+                    const selectedImage = $scope.selectedTemplate;
+
+                    $window.location.href = `download_page.html?CName=${encodeURIComponent(customerName)}&YName=${encodeURIComponent(yourName)}&info=${encodeURIComponent(yourInfo)}&Image=${encodeURIComponent(selectedImage)}`;
+                } else {
+                    alert("Please select a template.");
+                }
+            };
+        });
+    </script>
+
+
+    <!--<script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var app = angular.module('myApp', []);
+        let ecard = document.getElementById('E-card');
+        app.controller('myCtrl', function ($scope, $http, $window) {
+            $scope.templates = [];
+            $scope.customerName = '';
+            $scope.yourName = '';
+            $scope.yourInfo = '';
+            $scope.selectedTemplate = '';
+            $scope.TemplateName = '';
+            const baseUrl = "/";
+            const id = getQueryParam('id');
+            const val = getQueryParam('val');
+
+            const nameMap = {
+                "Welcome": "Welcome",
+                "AllTheBest": "All The Best",
+                "Birthday": "Birthday",
+                "WeddingAnniversary": "Wedding Anniversary",
+                "workanniversary": "Work Anniversary",
+                "Congratulations": "Congratulations",
+                "WorldCancerDay": "World Cancer Day",
+                "worldTuberculosisday": "World Tuberculosis Day",
+                "worldNurseDay": "World Nurse Day",
+                "worldBloodDonerDay": "World Blood Donor Day",
+                "NationalDoctor'sDay": "National Doctor's Day",
+                "worldHealthDay": "World Health Day",
+                "ThankYou": "Thank You",
+                "HappyNewYear": "Happy New Year",
+                "MerryChristmas": "Merry Christmas"
+            };
+
+
+            $scope.getProperName = function (classicName) {
+                return nameMap[classicName] || classicName;
+            };
+
+
+            let url = (val == 1)
+                ? `${baseUrl}Template/GetTemplateByFestivalID?id=${id}`
+                : `${baseUrl}Template/GetTemplateByClassicID?id=${id}`;
+
+            if (id) {
+
+                $http({
+                    method: "POST",
+                    url: url,
+                    headers: { "Content-Type": "application/json" }
+                }).then(
+                    function (response) {
+                        if (response.data && response.data.success) {
+                            $scope.templates = response.data.TemplateList || [];
+
+                            if ($scope.templates.length > 0) {
+                                $scope.TemplateName = $scope.templates[0].TemplateName || '';
+                                if ($scope.TemplateName) {
+                                    ecard.innerHTML = $scope.getProperName($scope.TemplateName) + " E-cards";
+                                } else {
+                                    ecard.innerHTML = "E-cards";
+                                }
+
+                            } else {
+                                console.error("Template list is empty.");
+                                ecard.innerHTML = "E-cards";
+                            }
+                        } else {
+                            console.error("No templates found or success flag is false.");
+                            ecard.innerHTML = "E-cards";
+                        }
+                    },
+                    function (error) {
+                        console.error("Error fetching templates:", error);
+                    }
+                );
+            } else {
+
+                $window.location.href = '/indexPage.html';
+            }
+
+
+            $scope.GenerateTemplate = function () {
+                if ($scope.selectedTemplate) {
+                    const customerName = $scope.customerName || "Guest";
+                    const yourName = $scope.yourName || "Sender";
+                    const yourInfo = $scope.yourInfo || "No Info";
+                    const selectedImage = $scope.selectedTemplate;
+
+                    $window.location.href = `download_page.html?CName=${encodeURIComponent(customerName)}&YName=${encodeURIComponent(yourName)}&info=${encodeURIComponent(yourInfo)}&Image=${encodeURIComponent(selectedImage)}`;
+                } else {
+                    alert("Please select a template.");
+                }
+            };
+        });
+    </script>-->
+
+</body>
+
+</html>

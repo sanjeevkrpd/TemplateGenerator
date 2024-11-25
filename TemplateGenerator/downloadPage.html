@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICL India</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link href="style/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/indexStyle.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500&display=swap');
+
+        #holder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #html-content-holder-Download {
+            position: relative;
+            width: 590px;
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        .text-mid {
+            padding: 66px 15px 20px;
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .text-head, .text-below {
+            text-align: center;
+            color: #3b70a4;
+        }
+
+        .text-head {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .text-below {
+            font-size: 20px;
+        }
+    </style>
+    <script src="script/jquery.min.js"></script>
+    <script src="script/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="holder">
+      
+        <div id="html-content-holder-Download">
+
+            <img src="./Content/Images/Classics/allthebest/all-the-best.jpg" id="Image" class="img-card" alt="Template Image">
+            <div class="text-mid">
+                <h4 class="text-head" id="CName">Dear Anurag,</h4>
+                <h4 class="text-below">Regards,</h4>
+                <h4 class="text-head" id="yourname">Sanjeev Kumar</h4>
+                <h4 id="info"></h4>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4 mb-5">
+        <a class="btn btn-danger" href="/indexPage.html">Reset</a>
+        <button id="btn-Convert-Html2Image" class="btn btn-success">Download</button>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            return new URLSearchParams(window.location.search).get(param);
+        }
+
+        // Set content based on query parameters
+        document.getElementById('CName').textContent = `Dear ${getQueryParam('CName') || 'Anurag'},`;
+        document.getElementById('yourname').textContent = getQueryParam('YName') || 'Sanjeev Kumar';
+        document.getElementById('Image').src = getQueryParam("Image") || "./Content/Images/Classics/allthebest/all-the-best.jpg";
+
+        $(document).ready(function () {
+            const element = document.getElementById("html-content-holder-Download");
+
+            $("#btn-Convert-Html2Image").on('click', function () {
+                html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = "creative.png";
+                    link.click();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

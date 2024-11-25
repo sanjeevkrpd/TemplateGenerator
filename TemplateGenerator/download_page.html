@@ -1,0 +1,364 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>AICL India</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+
+    <link href="style/bootstrap.min.css" rel="stylesheet">
+
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500&display=swap');
+
+        body {
+            margin: 0px;
+            background-image: url(images/bg.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        #previewImage {
+            opacity: 0;
+        }
+
+        .disclaimer {
+            font-size: 9px;
+            padding: 10px;
+            margin-top: 30px;
+            color: #777;
+        }
+
+
+
+        header {
+            text-align: center;
+        }
+
+            header.fixed {
+                background: #b42d26;
+                padding-bottom: 20px;
+                position: fixed;
+                top: 0px;
+                z-index: 9999;
+                width: 100%;
+            }
+
+                header.fixed .logo {
+                    display: none;
+                }
+
+                header.fixed .logo-white {
+                    display: inline-block;
+                    width: 150px;
+                }
+
+            header .logo {
+                margin-top: 20px;
+                width: 331px;
+                display: inline-block;
+                margin-bottom: 65px;
+            }
+
+            header .logo-white {
+                display: none;
+            }
+
+        .mt120 {
+            padding-top: 150px;
+        }
+
+        #html-content-holder {
+            border: 0px solid #ccc;
+            /*width:600px;*/
+            display: inline-block;
+        }
+
+        .btn-type,
+        input#btn-Preview-Image,
+        #btn-Convert-Html2Image {
+            border: 2px solid #123456;
+            color: #123456;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            margin-top: 20px !important;
+            display: block;
+            max-width: 200px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            margin: 0px auto;
+        }
+
+        div#previewImage canvas {
+            width: 100%;
+        }
+
+        div#previewImage {
+            width: 300px;
+            margin: 0px auto;
+        }
+
+        .operation-div {
+           /* display: inline-block;
+            vertical-align: top;*/
+            text-align: center;
+           /* width: calc(100% - 625px);*/
+        }
+
+        th.column {
+            padding: 0
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: inherit !important;
+        }
+
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        p {
+            line-height: inherit
+        }
+
+        @media (max-width:620px) {
+
+            header .logo {
+                margin-left: 135px
+            }
+
+            .disclaimer {
+                width: 600px;
+            }
+
+            #html-content-holder {
+                display: block;
+                width: 585px;
+            }
+
+            .operation-div {
+                display: block;
+                vertical-align: top;
+                text-align: center;
+                width: 600px;
+            }
+
+            .hide-mob {
+                display: none;
+            }
+
+            .icons-inner {
+                text-align: center;
+            }
+
+                .icons-inner td {
+                    margin: 0 auto;
+                }
+
+            .row-content {
+                width: 100% !important;
+            }
+
+            .image_block img.big {
+                width: auto !important;
+            }
+
+            .stack .column {
+                width: 100%;
+                display: block;
+            }
+        }
+    </style>
+
+
+
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Licorice&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap');
+
+        .text-mid {
+            margin: 0 auto !important;
+            padding: 10px 15px 20px !important;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 15px 20px;
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+            .text-mid p {
+                line-height: 25px !important;
+                font-family: 'Mulish', sans-serif;
+                font-size: 20px;
+                margin: 0 0 12px;
+                text-align: center;
+                font-weight: 400;
+            }
+
+            .text-mid h4 {
+                line-height: 22px !important;
+                font-family: 'Merienda', cursive;
+            }
+
+        .text-below {
+            margin: 0 0 0px;
+        }
+
+        .text-mid p {
+            margin: 0 0 6px;
+            font-family: 'Mulish', sans-serif
+        }
+
+        .text-mid h4.text-head {
+            margin: 0 0 3px;
+            font-family: 'Mulish', sans-serif;
+            font-size: 30px;
+            margin: 22px 14px 28px;
+            line-height: 23px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .text-mid h2 {
+            font-size: 32px;
+            font-family: 'Mulish', sans-serif;
+            text-align: Center;
+            margin: 25px;
+        }
+
+        body {
+            color: #376bb1;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+
+    <header>
+        <img class="logo" src="images/logo.png" />
+        <img class="logo-white" src="images/logo-white.png" />
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 mb-5">
+                <div id="html-content-holder">
+                    <div style="position: relative; font-family: sans-serif;border:0px solid #eee;">
+
+                        <img style="width: 100%;" src="Content/Images/Festivals/happynewyear/16.jpg" id="Image" class="img-card" alt="Template Image" />
+
+                        <div class="text-mid">
+                            <h4 class="text-head" id="CName">Dear Anurag,<br /> </h4>
+
+                            <!--<p style="margin-bottom:20px;">Wishing you an abundance of love <br>and happiness this Diwali. </p>-->
+
+                            <h4 class="text-below"
+                                style="font-family: 'Poppins', sans-serif;font-size: 22px;margin:25px 0 4px;line-height: 15px;text-align: center;font-weight: 500;">
+                                Regards,
+                            </h4>
+                            <h4 class="text-head" style="margin-bottom:10px;" id="yourname">Sanjeev</h4>
+                            <!--<h4 style="font-size: 16px;margin:0 0 3px;line-height: 15px;text-align: center;font-weight: 400;font-family: sans-serif !important;">
+                            sdss
+                        </h4>-->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6 col-sm-12">
+                <div class="operation-div">
+                    <a class="btn-type" href="/indexPage.html">Reset</a>
+
+                    <a id="btn-Convert-Html2Image" href="#">Download</a>
+                    <br />
+
+                    <div id="previewImage">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+  
+
+
+
+   
+
+
+
+    <script>
+        function getQueryParam(param) {
+            return new URLSearchParams(window.location.search).get(param);
+        }
+
+        // Set content based on query parameters
+        document.getElementById('CName').textContent = `Dear ${getQueryParam('CName') || 'Anurag'},`;
+        document.getElementById('yourname').textContent = getQueryParam('YName') || 'Sanjeev Kumar';
+        document.getElementById('Image').src = getQueryParam("Image") || "./Content/Images/Classics/allthebest/all-the-best.jpg";
+
+
+
+
+        $(document).ready(function () {
+
+            var element = $("#html-content-holder");
+            var getCanvas; 
+            var i = 0;
+           
+            if (i == 0) {
+                html2canvas(element, {
+                    onrendered: function (canvas) {
+                        $("#previewImage").append(canvas);
+                        getCanvas = canvas;
+                    }
+                });
+                $("#btn-Convert-Html2Image").show();
+
+                i++;
+            }
+
+
+
+            $("#btn-Convert-Html2Image").on('click', function () {
+                var imgageData = getCanvas.toDataURL("image/png");
+                
+                var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
+                $("#btn-Convert-Html2Image").attr("download", "creative.jpg").attr("href", newData);
+
+     
+
+            });
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

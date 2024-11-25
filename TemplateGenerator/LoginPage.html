@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AICL India</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link href="style/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/indexStyle.css" />
+    <style>
+        .form-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 68vh;
+        }
+
+        .form-card {
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img class="mx-auto d-block mb-4" src="images/logo.png">
+    </header>
+    <div class="container form-container">
+        <div class="col-md-6 col-lg-4 form-card bg-white">
+            <h1 class="text-center">Login Page</h1>
+            <div>
+                <div class="form-group">
+                    <label for="username">UserName</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter Username" required>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" required>
+                </div>
+                <br />
+                <button type="button" class="btn btn-primary w-100" onclick="submitLogin()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        async function submitLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            try {
+                const url = '/UploadImage/Login';
+                const res = await fetch(`${url}?username=${username}&password=${password}`, {
+                    method: 'POST'
+                });
+
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                const response = await res.json();
+
+                if (response.token) {
+                    localStorage.setItem('token', response.token);
+                    alert(response.msg);
+                    window.location.href = '/AddTemplates.html';
+                } else {
+                    alert(response.msg);
+                }
+            } catch (error) {
+                console.error("There was an error:", error);
+            }
+        }
+    </script>
+</body>
+</html>
